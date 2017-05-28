@@ -39,7 +39,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Forbidden", 403)
 		return
 	}
-	// Authenticate
 	conn := POOL.Get()
 	defer conn.Close()
 	email := strings.ToLower(r.FormValue("email"))
@@ -50,7 +49,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	// if password doesn't match
 	if string(password[:]) != r.FormValue("password") {
-		http.Error(w, "Forbidden", 403)
+		http.Error(w, "Wrong password", 403)
 		return
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
