@@ -8,13 +8,9 @@
 #### Installation
 + Install [redis](https://redis.io)
 + Clone repo to `$GOPATH/src/github.com/octohedron/gauth`
-+ Instlal dependencies
++ Install dependencies
 ```Bash
 $ go get
-```
-+ Build the binary
-```Bash
-$ go build
 ```
 + Set environment variables
 ```Bash
