@@ -4,6 +4,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"os"
@@ -43,24 +44,27 @@ func login(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 	email := strings.ToLower(r.FormValue("email"))
 	password, err := redis.Bytes(conn.Do("GET", email))
-	if err != nil {
-		log.Println(err)
+	if err == nil {
+		// compare passwords
+		err = bcrypt.CompareHashAndPassword(password, []byte(r.FormValue("password")))
+		// if it doesn't match
+		if err != nil {
+			http.Error(w, "Wrong password", 403)
+			return
+		}
+		token := jwt.New(jwt.SigningMethodHS256)
+		claims := token.Claims.(jwt.MapClaims)
+		claims["admin"] = false
+		claims["email"] = email
+		// 24 hour token
+		claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+		tokenString, _ := token.SignedString(SIGN_KEY)
+		w.Write([]byte(tokenString))
+	} else {
+		// email not found
+		http.Error(w, "Email not found", 403)
 		return
 	}
-	// if password doesn't match
-	if string(password[:]) != r.FormValue("password") {
-		http.Error(w, "Wrong password", 403)
-		return
-	}
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["admin"] = false
-	// don't forget to validate this string
-	claims["email"] = email
-	// 24 hour token
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-	tokenString, _ := token.SignedString(SIGN_KEY)
-	w.Write([]byte(tokenString))
 }
 
 // register a new user, gives you a token if the email -> password
@@ -80,16 +84,21 @@ func register(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Email taken"))
 		return
 	}
+	// get password from the post request form value
 	password := r.FormValue("password")
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password),
+		bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
 	// Set user -> password in redis
-	_, err = conn.Do("SET", email, string(password[:]))
+	_, err = conn.Do("SET", email, string(hashedPassword[:]))
 	if err != nil {
 		log.Println(err)
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["admin"] = false
-	// don't forget to validate this string
 	claims["email"] = email
 	// 24 hour token
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
