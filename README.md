@@ -4,6 +4,7 @@
 + `github.com/dgrijalva/jwt-go`
 + `github.com/garyburd/redigo/redis`
 + `github.com/gorilla/mux`
++ `golang.org/x/crypto/bcrypt`
 
 #### Installation
 + Install [redis](https://redis.io)
