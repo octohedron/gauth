@@ -49,7 +49,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		err = bcrypt.CompareHashAndPassword(password, []byte(r.FormValue("password")))
 		// if it doesn't match
 		if err != nil {
-			http.Error(w, "Wrong password", 403)
+			http.Error(w, "Wrong password", 401)
 			return
 		}
 		token := jwt.New(jwt.SigningMethodHS256)
@@ -62,7 +62,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(tokenString))
 	} else {
 		// email not found
-		http.Error(w, "Email not found", 403)
+		http.Error(w, "Email not found", 200)
 		return
 	}
 }
