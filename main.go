@@ -14,13 +14,16 @@ import (
 
 // Declare a global variable to store the Redis connection pool.
 var POOL *redis.Pool
-var PORT = "4000"
+var PORT = ""
 var SIGN_KEY = []byte("secret")
 
 //Init just loads the default variables
 func init() {
 	POOL = newPool("localhost:6379")
 	PORT = os.Getenv("AUTH_PORT")
+	if PORT == "" {
+		PORT = "4000"
+	}
 	SIGN_KEY = []byte(os.Getenv("SIGN_KEY"))
 }
 
