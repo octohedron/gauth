@@ -15,18 +15,18 @@ $ go get
 ```
 + Set environment variables
 ```Bash
-export AUTH_PORT=YOUR_PORT # i.e. 8000
-export SIGN_KEY=secret # your jwt sign key
+$ export AUTH_PORT=YOUR_PORT # i.e. 8000
+$ export SIGN_KEY=secret # your jwt sign key
 ```
 #### Usage
 ```Bash
-go build && ./gauth
+$ go build && ./gauth
 ```
 This will run the server and you can try it out with curl
 
 #### Register
 ```Bash
-curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/register
+$ curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/register
 # Should print out a token, similar to 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
 ```
@@ -34,7 +34,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
 
 #### Login
 ```Bash
-curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/login
+$ curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/login
 # Should print out a token, similar to 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
 ```
