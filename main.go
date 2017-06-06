@@ -17,7 +17,7 @@ var POOL *redis.Pool
 var PORT = ""
 var SIGN_KEY = []byte("secret")
 
-//Init just loads the default variables
+// Loads the default variables
 func init() {
 	POOL = newPool("localhost:6379")
 	PORT = os.Getenv("AUTH_PORT")
@@ -27,7 +27,7 @@ func init() {
 	SIGN_KEY = []byte(os.Getenv("SIGN_KEY"))
 }
 
-// returns a pointer to a redis pool
+// Returns a pointer to a redis pool
 func newPool(addr string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     5,
@@ -36,7 +36,7 @@ func newPool(addr string) *redis.Pool {
 	}
 }
 
-// gets you a token if you pass the right credentials
+// Gets you a token if you pass the right credentials
 func login(w http.ResponseWriter, r *http.Request) {
 	var err error
 	if r.Method != "POST" {
@@ -70,8 +70,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// register a new user, gives you a token if the email -> password
-// is not registered already
+// Register a new user, gives you a token and sets the email -> password
+// in redis if the email doesn't exist
 func register(w http.ResponseWriter, r *http.Request) {
 	var err error
 	if r.Method != "POST" {
@@ -94,7 +94,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	// Set user -> password in redis
+	// Set email -> password in redis
 	_, err = conn.Do("SET", email, string(hashedPassword[:]))
 	if err != nil {
 		log.Println(err)
