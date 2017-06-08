@@ -40,6 +40,7 @@ func newPool(addr string) *redis.Pool {
 // Gets you a token if you pass the right credentials
 func login(w http.ResponseWriter, r *http.Request) {
 	var err error
+	setHeaders(w)
 	if r.Method != "POST" {
 		http.Error(w, fmt.Sprintf("{ \"error\": \"%s\" }", "Forbidden request"), 403)
 		return
@@ -75,6 +76,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 // in redis if the email doesn't exist
 func register(w http.ResponseWriter, r *http.Request) {
 	var err error
+	setHeaders(w)
 	if r.Method != "POST" {
 		http.Error(w, fmt.Sprintf("{ \"error\": \"%s\" }", "Forbidden request"), 403)
 		return
@@ -108,6 +110,11 @@ func register(w http.ResponseWriter, r *http.Request) {
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	tokenString, _ := token.SignedString(SIGN_KEY)
 	w.Write([]byte(fmt.Sprintf("{ \"access_token\": \"%s\" }", tokenString)))
+}
+
+func setHeaders(w http.ResponseWriter) http.ResponseWriter {
+	w.Header().Set("Content-Type", "application/json")
+	return w
 }
 
 func main() {
