@@ -28,7 +28,7 @@ This will run the server and you can try it out with curl
 ```Bash
 $ curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/register
 # Should print out a token, similar to 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
+{ "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ... " }
 ```
 
 
@@ -36,7 +36,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
 ```Bash
 $ curl -X POST -F 'email=a@a.com' -F 'password=password' http://192.168.1.43:4200/login
 # Should print out a token, similar to 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
+{ "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ... " }
 ```
 
 LICENSE: MIT
