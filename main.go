@@ -114,6 +114,13 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 func setHeaders(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Content-Type", "application/json")
+	// Uncomment the following lines if you are having CORS issues,
+	// optionally, replace "*" with your preferred address
+	//
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	// w.Header().Set("Access-Control-Allow-Headers",
+	// 	"Accept, 0, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	return w
 }
 
