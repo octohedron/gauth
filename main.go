@@ -156,6 +156,7 @@ func main() {
 		WriteTimeout: 5 * time.Second,
 		ReadTimeout:  5 * time.Second,
 	}
+	log.Println("Auth server running at", PORT)
 	err := srv.ListenAndServe()
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
