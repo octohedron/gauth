@@ -20,7 +20,7 @@ type server struct {
 	router *mux.Router
 }
 
-// POOL - Declare a global variable to store the Redis connection pool.
+// POOL - Declare a global variable to store the Redis connection pool
 var POOL *redis.Pool
 
 // PORT - The running port for this service
@@ -62,7 +62,7 @@ func (s *server) handleLogin() http.HandlerFunc {
 			http.Error(w, fmt.Sprintf("{ \"error\": \"%s\" }", "Forbidden request"), 403)
 			return
 		}
-		conn := POOL.Get()
+		conn := s.pool.Get()
 		defer conn.Close()
 		email := strings.ToLower(r.FormValue("email"))
 		password, err := redis.Bytes(conn.Do("GET", email))
@@ -100,7 +100,7 @@ func (s *server) handleRegister() http.HandlerFunc {
 			http.Error(w, fmt.Sprintf("{ \"error\": \"%s\" }", "Forbidden request"), 403)
 			return
 		}
-		conn := POOL.Get()
+		conn := s.pool.Get()
 		defer conn.Close()
 		email := strings.ToLower(r.FormValue("email"))
 		// check if the user is already registered
