@@ -26,8 +26,8 @@ var POOL *redis.Pool
 // PORT - The running port for this service
 var PORT = ""
 
-// SIGN_KEY - The JWT Sign key
-var SIGN_KEY = []byte("secret")
+// signKey - The JWT Sign key
+var signKey = []byte("secret")
 
 // Loads the default variables
 func init() {
@@ -36,7 +36,7 @@ func init() {
 	if PORT == "" {
 		PORT = "4000"
 	}
-	SIGN_KEY = []byte(os.Getenv("SIGN_KEY"))
+	signKey = []byte(os.Getenv("signKey"))
 }
 
 // Returns a pointer to a redis pool
@@ -80,7 +80,7 @@ func (s *server) handleLogin() http.HandlerFunc {
 			claims["email"] = email
 			// 24 hour token
 			claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-			tokenString, _ := token.SignedString(SIGN_KEY)
+			tokenString, _ := token.SignedString(signKey)
 			w.Write([]byte(fmt.Sprintf("{ \"access_token\": \"%s\" }", tokenString)))
 		} else {
 			// email not found
@@ -127,7 +127,7 @@ func (s *server) handleRegister() http.HandlerFunc {
 		claims["email"] = email
 		// 24 hour token
 		claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-		tokenString, _ := token.SignedString(SIGN_KEY)
+		tokenString, _ := token.SignedString(signKey)
 		w.Write([]byte(fmt.Sprintf("{ \"access_token\": \"%s\" }", tokenString)))
 	}
 }
