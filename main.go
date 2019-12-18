@@ -85,7 +85,6 @@ func (s *server) handleLogin() http.HandlerFunc {
 		} else {
 			// email not found
 			http.Error(w, fmt.Sprintf("{ \"error\": \"%s\" }", "Email not found"), 401)
-			return
 		}
 	}
 }
